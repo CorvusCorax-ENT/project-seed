@@ -1,4 +1,3 @@
 package com.seed.entities.components
 
-interface Component {
-}
+interface Component

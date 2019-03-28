@@ -1,4 +1,7 @@
 package com.seed.geodata
 
-class Region {
+import com.seed.entities.Entity
+
+interface Region {
+    val regionEntities: List<Entity>
 }
