@@ -1,17 +1,13 @@
 package com.seed
 
-import com.seed.entities.components.ComponentId
-import com.seed.entities.components.Position
-import com.seed.entities.components.Stats
+import com.seed.desires.MoveTo
+import com.seed.entities.ActorIndex
+import com.seed.math.Float3
 import mu.KotlinLogging
-import kotlin.random.Random
 
 val logger = KotlinLogging.logger { }
 
 class Application {
-
-    init {
-    }
 
     fun start() {
         logger.info { "Started!" }
@@ -23,13 +19,11 @@ class Application {
         fun main(vararg args: String) {
             val component = DaggerSeedComponent.create()
             val application = component.provideApplication()
+            val entity = component.provideWorld().createEntity()
+            val pool = component.provideEntityPool()
 
-            val entityPool = component.provideEntityPool()
-            for (i in 0..200) {
-                val entity = entityPool.create(Position(x = Random.nextFloat(), y = Random.nextFloat()), Stats())
-                val componentId = ComponentId.getComponentIndex(Position::class)
-                println("Hello im entity $entity and i have a position component at ${entityPool.getComponent(entity, componentId)}")
-            }
+            val actor = pool.getComponent(entity, ActorIndex) ?: return
+            actor.currentDesire = MoveTo(Float3(12f, 0f, -12f), 1f)
             application.start()
         }
     }

@@ -5,39 +5,48 @@ import com.seed.entities.Entity
 import com.seed.entities.components.Component
 import com.seed.entities.components.ComponentId
 import com.seed.entities.components.ComponentId.Companion.MaxComponentSize
+import com.seed.entities.components.Manifest
 
 class BasicEntityPool(override val identityPool: IdentityPool) : EntityPool {
     private var entities = Array<Components?>(DefaultEntityPoolSize) { null }
 
     override fun create(vararg components: Component): Entity {
-        return identityPool.generate().also { entity ->
-            val isAvailable = if (entity >= entities.size) false else entities[entity] == null
+        synchronized(this) {
+            return identityPool.generate().also { entity ->
+                val isAvailable = if (entity >= entities.size) false else entities[entity] == null
 
-            if (isAvailable) {
-                val compList = mapComponents(components)
-                entities[entity] = compList
-            } else {
-                if (entity >= entities.size) {
-                    val newArray = Array<Components?>(entities.size + PoolGrowSize) { null }
-                    System.arraycopy(entities, 0, newArray, 0, entities.size)
-                    entities = newArray
-                    entities[entity] = mapComponents(components)
+                if (isAvailable) {
+                    val compList = mapComponents(components)
+                    entities[entity] = compList
+                } else {
+                    if (entity >= entities.size) {
+                        val newArray = Array<Components?>(entities.size + PoolGrowSize) { null }
+                        System.arraycopy(entities, 0, newArray, 0, entities.size)
+                        entities = newArray
+                        entities[entity] = mapComponents(components)
+                    }
                 }
             }
         }
+
     }
 
-    private fun mapComponents(components: Array<out Component>): ArrayList<Component> {
-        val compList = ArrayList<Component>(MaxComponentSize)
-        compList.ensureCapacity(MaxComponentSize)
+    private fun mapComponents(components: Array<out Component>): Components {
+        val compMap = mutableListOf<Component>().apply {
+            add(Manifest())
+            addAll(components)
+        }.map { Pair(ComponentId.getComponentIndex(it::class), it) }
 
-        for (i in 0 until components.size) {
-            val component = components[i]
-            val componentId = ComponentId.getComponentIndex(component::class)
-            compList.add(componentId.index, component)
+        val array = Components(MaxComponentSize) { null }
+        for (pair in compMap) {
+            val componentId = pair.first
+            val component = pair.second
+            array[componentId.index] = component
         }
-        return compList
+        return array
     }
+
+    override fun size(): Int = entities.size
 
     override fun getComponentMap(entity: Entity): Components? {
         return entities[entity]

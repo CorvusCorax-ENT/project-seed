@@ -2,7 +2,6 @@ package com.seed.entities.components
 
 import kotlin.reflect.KClass
 
-
 class ComponentId<T: Component> private constructor() {
     val index: Int = MaxComponentSize++
 

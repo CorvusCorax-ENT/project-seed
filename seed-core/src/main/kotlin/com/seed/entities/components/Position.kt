@@ -1,3 +1,5 @@
 package com.seed.entities.components
 
-data class Position(var x: Float = 0f, var y: Float = 0f, var z: Float = 0f) : Component
+import com.seed.math.Float3
+
+data class Position(var position: Float3 = Float3(), val direction: Float3 = Float3()) : Component

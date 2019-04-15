@@ -4,6 +4,8 @@ import com.seed.entities.pool.BasicEntityPool
 import com.seed.entities.pool.BasicIdentityPool
 import com.seed.entities.pool.EntityPool
 import com.seed.entities.pool.IdentityPool
+import com.seed.world.BaseWorld
+import com.seed.world.World
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -21,4 +23,8 @@ class AppModule {
     @Provides
     @Reusable
     fun provideEntityPool(identityPool: IdentityPool): EntityPool = BasicEntityPool(identityPool)
+
+    @Provides
+    @Reusable
+    fun provideWorld(entityPool: EntityPool): World = BaseWorld(entityPool)
 }

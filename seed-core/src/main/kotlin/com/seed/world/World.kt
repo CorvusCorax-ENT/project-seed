@@ -1,9 +1,12 @@
-package com.seed.entities
+package com.seed.world
 
+import com.seed.entities.Entity
 import com.seed.entities.pool.EntityPool
-import com.seed.geodata.Region
+import com.seed.entities.systems.EntitySystem
 
 interface World {
+    val systems: List<EntitySystem> // should world decide this?
+
     val entityPool: EntityPool
 
     fun createEntity(): Entity
@@ -12,5 +15,5 @@ interface World {
     fun registerRegion(region: Region)
     fun removeRegion(region: Region)
 
-    fun update(deltaTime: Float)
+    fun update()
 }

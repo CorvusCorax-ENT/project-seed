@@ -10,6 +10,7 @@ interface EntityPool {
 
     fun create(vararg components: Component): Entity
     fun getComponentMap(entity: Entity): Components?
-    fun <T : Component> getComponent(entity: Entity, componentId: ComponentId<T>): Component?
+    fun <T : Component> getComponent(entity: Entity, componentId: ComponentId<T>): T?
     fun destroy(entity: Entity)
+    fun size(): Int
 }
