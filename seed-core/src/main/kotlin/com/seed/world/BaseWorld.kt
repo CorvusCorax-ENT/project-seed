@@ -10,6 +10,9 @@ import com.seed.entities.systems.MovementSystem
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
+const val WorldTicks = 10
+const val WorldTicksPerSecond =  1000L / WorldTicks
+
 class BaseWorld(override val entityPool: EntityPool) : World {
     private val scheduler = Executors.newSingleThreadScheduledExecutor()
 
@@ -18,7 +21,7 @@ class BaseWorld(override val entityPool: EntityPool) : World {
     )
 
     init {
-        scheduler.scheduleAtFixedRate({ update() }, 0, 500, TimeUnit.MILLISECONDS)
+        scheduler.scheduleAtFixedRate({ update() }, 0, WorldTicksPerSecond, TimeUnit.MILLISECONDS)
     }
 
     override fun createEntity(): Entity {
@@ -47,7 +50,6 @@ class BaseWorld(override val entityPool: EntityPool) : World {
     }
 
     override fun update() {
-        println("World tick")
         systems.forEach { it.update() }
     }
 
