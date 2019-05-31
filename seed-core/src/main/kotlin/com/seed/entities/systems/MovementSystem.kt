@@ -4,7 +4,10 @@ import com.seed.desires.DesireIdle
 import com.seed.desires.MoveTo
 import com.seed.entities.*
 import com.seed.entities.pool.EntityPool
-import com.seed.math.*
+import com.seed.math.Ray
+import com.seed.math.distance
+import com.seed.math.normalize
+import com.seed.math.pointAt
 import kotlin.math.roundToInt
 
 class MovementSystem(entityPool: EntityPool) : IteratingSystem(entityPool) {
@@ -27,11 +30,11 @@ class MovementSystem(entityPool: EntityPool) : IteratingSystem(entityPool) {
 
         val distance = distance(position, toPosition).roundToInt()
         if (distance <= 0) {
-            actor.currentDesire = DesireIdle()
+            actor.changeDesire(DesireIdle())
         }
         else {
             val ray = Ray(position, direction)
-            positionComponent.position = pointAt(ray, .1f) // TODO compute step count based on desire
+            positionComponent.position = pointAt(ray, 1f) // TODO compute step count based on desire
         }
 
         println("Pawn to ${positionComponent.position} dist $distance")

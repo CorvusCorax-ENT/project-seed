@@ -23,7 +23,7 @@ class Application {
             val pool = component.provideEntityPool()
 
             val actor = pool.getComponent(entity, ActorIndex) ?: return
-            actor.currentDesire = MoveTo(Float3(12f, 0f, -12f), 1f)
+            actor.influence(MoveTo(Float3(12f, 0f, -12f), 1f))
             application.start()
         }
     }
