@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 const val WorldTicks = 10
 const val WorldTicksPerSecond =  1000L / WorldTicks
 
-class BaseWorld(override val entityPool: EntityPool) : World {
+class DefaultWorld(override val entityPool: EntityPool) : World {
     private val scheduler = Executors.newSingleThreadScheduledExecutor()
 
     override val systems: List<EntitySystem> = mutableListOf(
